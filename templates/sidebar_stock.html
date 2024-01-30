@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: "Lato", sans-serif;
+  overflow-y: hidden;
+}
+
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: dimgrey;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
+
+.sidebar a {
+  display: block;
+  color: white;
+  padding: 16px;
+  text-decoration: none;
+}
+
+.sidebar a.active {
+  background-color: #333;
+  color: grey;
+}
+
+.sidebar a:hover:not(.active) {
+  background-color: #333;
+  color: white;
+}
+
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 900px;
+  /*border: 1px solid #49d;*/
+}
+
+month{
+  height:30%;
+  width:90%;
+  margin-left:1%;
+  margin-bottom:1%;
+  float: left;
+  /*border:1px solid #49d;*/
+}
+
+category{
+  height:50%;
+  width:90%;
+  margin-bottom:1%;
+  float: left;
+  /*border:1px solid #49d;*/
+}
+
+.btn {
+  background-color: grey;
+  color: white;
+  padding: 10px;
+  font-size: 10px;
+  border: none;
+  outline: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 6px 8px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .btn {
+  background-color: black;
+}
+
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {float: left;}
+  div.content {margin-left: 0;}
+}
+
+@media screen and (max-width: 400px) {
+  .sidebar a {
+    text-align: center;
+    float: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="sidebar">
+  <a href="./sidebar.html"><i class="fa fa-fw fa-home"></i>Home Page</a>
+  <a href="./sidebar_bubble.html"><i class="fa fa-fw fa-align-justify"></i>Bubble & Cor</a>
+  <a href="./sidebar_month.html"><i class="fa fa-fw fa-line-chart"></i>Monthly review</a>
+  <a href="./sidebar_contract.html"><i class="fa fa-fw fa-search"></i>Contract</a>
+  <a href="./chi_cang.html"><i class="fa fa-fw fa-line-chart"></i>receipt</a>
+  <a class='active' href="./sidebar_stock.html"><i class="fa fa-fw fa-line-chart"></i>stock</a>
+</div>
+
+<!--</div>-->
+<div class="content">
+    <div id="container3" style = "margin-top:0;height:6%;width:90%;margin-left:1%;float: left; ">
+        <p>上证50 (001005260) ，沪深300 (001005290)，中证500和中证1000宽基指数的各自申万一级行业占比情况</p>
+    </div>
+    <div style="margin-left: 1%; margin-top: 4%; width: 99%; height: 85%; ">
+    <div id='pie_area' style="margin-left:0; margin-top: 0; width: 66%; height: 99%; border:1px solid #49d;float: left">
+        <div id = 'group1' style="margin-left:1%;margin-top: 1%; width: 99%; height: 48%; ">
+            <div id="pie1" style="margin-left: 0; margin-top: 0; width: 50%; height: 100%; float: left;"></div>
+            <div id="pie2" style="margin-left: 50%; margin-top: 0; width: 49%; height: 100%;"></div>
+        </div>
+        <div id = 'group2' style="margin-left:1%;margin-top: 1%; width: 99%; height: 48%; ">
+            <div id="pie3" style="margin-left: 0; margin-top: 0; width: 50%; height: 100%; float: left;"></div>
+            <div id="pie4" style="margin-left: 50%; margin-top: 0; width: 49%; height: 100%;"></div>
+        </div>
+    </div>
+    <div id = 'group3' style="margin-left:67%;margin-top: 0; width: 32%; height: 99%; border:1px solid #49d;"></div>
+    </div>
+</div>
+
+
+
+<script>
+    let chartDom1 = document.getElementById('pie1');
+    let myChart1 = echarts.init(chartDom1);
+
+    let chartDom2 = document.getElementById('pie2');
+    let myChart2 = echarts.init(chartDom2);
+
+    let chartDom3 = document.getElementById('pie3');
+    let myChart3 = echarts.init(chartDom3);
+
+    let chartDom4 = document.getElementById('pie4');
+    let myChart4 = echarts.init(chartDom4);
+
+    let data = []
+    $.ajax("/stock", {
+          type: 'get',
+          async: false,
+          success: function (res) {
+            data = res;
+            console.log(data);
+          },
+          error: function (e, status) {
+            alert(status);
+          }
+    })
+    let sum1 = 0; let sum2 = 0; let sum3 = 0; let sum4 = 0;
+    for (let i = 0; i<4; i++){
+            for (let j=0; j<data[i].length; j++){
+                if (i===0){
+                    sum1+=data[i][j]['value'];
+                }
+                else if (i===1){
+                    sum2+=data[i][j]['value'];
+                }
+                else if (i===2){
+                    sum3+=data[i][j]['value'];
+                }
+                else {
+                    sum4+=data[i][j]['value'];
+                }
+            }
+    }
+    // pie1
+    {
+        option1 = {
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                type: 'scroll',
+                top: '0%',
+                left: 'left',
+                orient: 'vertical'
+            },
+            title: {
+                text: '上证50',
+                left: 'center',
+            },
+            series: [
+                {
+                    name: 'Access From',
+                    type: 'pie',
+                    radius: ['20%', '50%'],
+                    center: ['60%','50%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: true,
+                        formatter(param) {
+                            // correct the percentage
+                            // return param.name + ' (' + param.percent * 2 + '%)';
+                            return ' (' + param.percent * 1 + '%)';
+                        }
+                    },
+                    labelLine: {
+                        show: true
+                    },
+                    data: data[0]
+                }
+            ]
+        };
+        window.addEventListener("resize", () => {
+                if (myChart1) {
+                    myChart1.resize()
+                }
+        })
+        option1 && myChart1.setOption(option1);
+        myChart1.on('click', function (params){
+            stock_bar(params['name'])
+        });
+    }
+
+    // pie2
+    {
+        option2 = {
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                type: 'scroll',
+                top: '0%',
+                left: 'left',
+                orient: 'vertical'
+            },
+            title: {
+                text: '沪深300',
+                left: 'center',
+            },
+            series: [
+                {
+                    name: 'Access From',
+                    type: 'pie',
+                    radius: ['20%', '50%'],
+                    center: ['60%','50%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: true,
+                        formatter(param) {
+                            // correct the percentage
+                            // return param.name + ' (' + param.percent * 2 + '%)';
+                            return ' (' + param.percent * 1 + '%)';
+                        }
+                    },
+                    labelLine: {
+                        show: true
+                    },
+                    data: data[1]
+                }
+            ]
+        };
+        window.addEventListener("resize", () => {
+                if (myChart2) {
+                    myChart2.resize()
+                }
+        })
+        option2 && myChart2.setOption(option2);
+        myChart2.on('click', function (params){
+            stock_bar(params['name'])
+        });
+    }
+
+    // pie3
+    {
+        option3 = {
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                type: 'scroll',
+                top: '0%',
+                left: 'left',
+                orient: 'vertical'
+            },
+            title: {
+                text: '中证500',
+                left: 'center',
+            },
+            series: [
+                {
+                    name: 'Access From',
+                    type: 'pie',
+                    radius: ['20%', '50%'],
+                    center: ['60%','50%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: true,
+                        formatter(param) {
+                            // correct the percentage
+                            // return param.name + ' (' + param.percent * 2 + '%)';
+                            return ' (' + param.percent * 1 + '%)';
+                        }
+                    },
+                    labelLine: {
+                        show: true
+                    },
+                    data: data[2]
+                }
+            ]
+        };
+        window.addEventListener("resize", () => {
+                if (myChart3) {
+                    myChart3.resize()
+                }
+        })
+        option3 && myChart3.setOption(option3);
+        myChart3.on('click', function (params){
+            stock_bar(params['name'])
+        });
+    }
+
+    // pie4
+    {
+        option4 = {
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                type: 'scroll',
+                top: '0%',
+                left: 'left',
+                orient: 'vertical'
+            },
+            title: {
+                text: '中证1000',
+                left: 'center',
+            },
+            series: [
+                {
+                    name: 'Access From',
+                    type: 'pie',
+                    radius: ['20%', '50%'],
+                    center: ['60%','50%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: true,
+                        formatter(param) {
+                            // correct the percentage
+                            // return param.name + ' (' + param.percent * 2 + '%)';
+                            return ' (' + param.percent * 1 + '%)';
+                        }
+                    },
+                    labelLine: {
+                        show: true
+                    },
+                    data: data[3]
+                }
+            ]
+        };
+        window.addEventListener("resize", () => {
+                if (myChart4) {
+                    myChart4.resize()
+                }
+        })
+        option4 && myChart4.setOption(option4);
+        myChart4.on('click', function (params){
+            stock_bar(params['name'])
+        });
+    }
+
+    function stock_bar(ind){
+        let statis = [0, 0, 0, 0]
+        for (let i = 0; i<4; i++){
+            for (let j=0; j<data[i].length; j++){
+                if (ind === data[i][j]['name']){
+                    statis[i] = data[i][j]['value']
+                }
+            }
+        }
+        // let sum = 0;
+        // for (let z=0; z<statis.length; z++){
+        //     sum += statis[z]
+        // }
+        statis[0] = statis[0]/sum1;
+        statis[1] = statis[1]/sum2;
+        statis[2] = statis[2]/sum3;
+        statis[3] = statis[3]/sum4;
+        let chartDom5 = document.getElementById('group3');
+        let myChart5 = echarts.init(chartDom5);
+
+        option = {
+          title: {
+            text: '各自申万一级行业占比比较'
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            }
+          },
+          legend: {
+              left: 'right'
+          },
+          grid: {
+            top: '10%',
+            left: '0%',
+            right: '10%',
+            bottom: '40%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01],
+          },
+          yAxis: {
+            type: 'category',
+            data: ['上证50', '沪深300', '中证500', '中证1000']
+          },
+          series: [
+            {
+              name: '行业: ' + ind,
+              type: 'bar',
+              data: statis,
+            }
+          ]
+        };
+        window.addEventListener("resize", () => {
+                if (myChart5) {
+                    myChart5.resize()
+                }
+        })
+        option && myChart5.setOption(option);
+    }
+    stock_bar('交通运输')
+
+
+</script>
+
+</body>
+</html>
+

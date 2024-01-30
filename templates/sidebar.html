@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: "Lato", sans-serif;
+  overflow-y: hidden;
+}
+
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: dimgrey;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
+
+.sidebar a {
+  display: block;
+  color: white;
+  padding: 16px;
+  text-decoration: none;
+}
+
+.sidebar a.active {
+  background-color: #333;
+  color: grey;
+}
+
+.sidebar a:hover:not(.active) {
+  background-color: #333;
+  color: white;
+}
+
+div.content {
+  margin-left: 200px;
+  /*padding: 1px 16px;*/
+  height: 900px;
+}
+
+div.content.container_group1 {
+    margin-left: 5%;
+    margin-right:5%;
+    height:  90%;
+    width: 40%;
+    background-color: white;
+    /* border:1px solid #49d;  */
+    /* margin-bottom: 3%; */
+}
+
+
+
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {float: left;}
+  div.content {margin-left: 0;}
+}
+
+@media screen and (max-width: 400px) {
+  .sidebar a {
+    text-align: center;
+    float: top;
+  }
+}
+</style>
+</head>
+<body>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="sidebar">
+  <a class = 'active' href="./sidebar.html"><i class="fa fa-fw fa-home"></i>Home Page</a>
+  <a href="./sidebar_bubble.html"><i class="fa fa-fw fa-align-justify"></i>Bubble & Cor</a>
+  <a href="./sidebar_month.html"><i class="fa fa-fw fa-line-chart"></i>Monthly review</a>
+  <a href="./sidebar_contract.html"><i class="fa fa-fw fa-search"></i>Contract</a>
+  <a href="./chi_cang.html"><i class="fa fa-fw fa-line-chart"></i>receipt</a>
+  <a href="./sidebar_stock.html"><i class="fa fa-fw fa-line-chart"></i>stock</a>
+</div>
+
+<div class="content">
+  <div style="height:87%;width:100%">
+      <img style="max-height:100%;width:100%;overflow:hidden;height:auto" src="static_image/back4.jpg" alt="">
+  </div>
+  <div style="height:13%;width:100%">
+<!--      <h2 align="center">Financial Data Visualization</h2>-->
+      <p align="center" >The left sidebar is the navigation panel between different views of visualization</p>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: "Lato", sans-serif;
+  overflow-y: hidden;
+}
+
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: dimgrey;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
+
+.sidebar a {
+  display: block;
+  color: white;
+  padding: 16px;
+  text-decoration: none;
+}
+
+.sidebar a.active {
+  background-color: #333;
+  color: grey;
+}
+
+.sidebar a:hover:not(.active) {
+  background-color: #333;
+  color: white;
+}
+
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 900px;
+  border: 1px solid #49d;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+
+
+
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {float: left;}
+  div.content {margin-left: 0;}
+}
+
+@media screen and (max-width: 400px) {
+  .sidebar a {
+    text-align: center;
+    float: none;
+  }
+}
+</style>
+</head>
+<!--<body style = "background-image:url(static_image/back5.jpg); background-repeat: repeat; background-size: 100% 100% ; background-attachment: fixed;" >-->
+<body>
+
+<script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="sidebar">
+  <a href="./sidebar.html"><i class="fa fa-fw fa-home"></i>Home Page</a>
+  <a class = 'active' href="./sidebar_bubble.html"><i class="fa fa-fw fa-align-justify"></i>Bubble & Cor</a>
+  <a href="./sidebar_month.html"><i class="fa fa-fw fa-line-chart"></i>Monthly review</a>
+  <a href="./sidebar_contract.html"><i class="fa fa-fw fa-search"></i>Contract</a>
+  <a href="./chi_cang.html"><i class="fa fa-fw fa-line-chart"></i>receipt</a>
+  <a href="./sidebar_stock.html"><i class="fa fa-fw fa-line-chart"></i>stock</a>
+</div>
+
+<div class="content">
+<!--  <h2>Responsive Sidebar Example</h2>-->
+<!--  <p>This example use media queries to transform the sidebar to a top navigation bar when the screen size is 700px or less.</p>-->
+<!--  <p>We have also added a media query for screens that are 400px or less, which will vertically stack and center the navigation links.</p>-->
+<!--  <h3>Resize the browser window to see the effect.</h3>-->
+  <div id="container3" style = "margin-top:2%;height:30%;width:90%;margin-left:3%;float: left; background-color: whitesmoke;">
+    <h2> 期货指数波动 vs 价格分位数气泡图   &   品种相关性表格</h2>
+      <p> 1.有色：'沪锌ZN', '铜CU', '沪铝AL', '沪镍NI', '沪锡SN'</p>
+      <p> 2.贵金属：'沪银AG', '黄金AU' </p>
+      <p> 3.黑色：'铁矿I', '螺纹钢RB', '热卷HC', '焦炭', '焦煤', '锰硅', '硅铁' </p>
+      <p> 4.农产品：'豆粕M', '豆油Y', '棕榈油P', '棉花CF', '菜油OC', '鸡蛋', '菜粕', '白糖', '苹果'</p>
+      <P> 5.化工：'橡胶RU', '原油SC', '燃油FU', '纸浆SP', '沥青BU', '纯碱SA', 'PTA', '甲醇MA', '玻璃FG', 'PVC', '乙二醇', '聚丙烯', 'LPG', '苯乙烯', '塑料' </P>
+  </div>
+  <div style = "margin-top:2%;height:50%;width:100%;margin-left:1%;float: left; background-color: white;">
+  <div id='container1' style = "margin-top:1%;height:100%;width:50%;margin-left:1%;float: left; background-color: white;"></div>
+  <div id='container2' style = "margin-top:1%;height:100%;width:45%;margin-left:53%;overflow-x:auto;overflow-y:auto;background-color: white;"></div>
+  </div>
+<!--  border: 1px solid #49d;-->
+
+</div>
+<script>
+    let object = document.getElementById('container2')
+    let data;
+    $.ajax("/bubble", {
+      type: 'get',
+      async: false,
+      data: {
+        parameterName: "something"
+      },
+      success: function (res) {
+        data = res;
+      },
+      error: function (e, status) {
+        alert(status);
+      }
+    })
+    let data1 = [];
+    let data2 = [];
+    let data3 = [];
+    let data4 = [];
+    let data5 = [];
+    for (let i=0; i<data.length; i++){
+      if (data[i][3] === '有色'){data1.push(data[i]);}
+      if (data[i][3] === '贵金属'){data2.push(data[i]);}
+      if (data[i][3] === '黑色'){data3.push(data[i]);}
+      if (data[i][3] === '农产品'){data4.push(data[i]);}
+      if (data[i][3] === '化工'){data5.push(data[i]);}
+    }
+
+</script>
+
+<script>
+window.onload = function (){
+
+    bubble();
+    comp_table(1);
+
+    function bubble(){
+        let option;
+        let chartDom = document.getElementById('container1');
+        let myChart = echarts.init(chartDom, null, {
+                renderer: 'canvas',
+                useDirtyRect: false
+        });
+
+
+        option = {
+          title: {
+            text: '期货交易 (价格 vs. 波动率分位数)',
+            left: '1%',
+            top: '3%'
+          },
+          legend: {
+            right: '10%',
+            top: '3%',
+            data: ['有色', '贵金属', '黑色', '农产品', '化工']
+          },
+          grid: {
+            left: '8%',
+            top: '20%',
+              height: '70%'
+          },
+          xAxis: {
+              name: '价格分位数(%)',
+            nameLocation: 'center',
+            nameGap: 20,
+            nameTextStyle: {
+              fontSize: 15
+            },
+            splitLine: {
+              lineStyle: {
+                type: 'dashed'
+              }
+            }
+          },
+          yAxis: {
+              name: '波动率分位数(%)',
+            nameLocation: 'end',
+            nameGap: 10,
+            nameTextStyle: {
+              fontSize: 15
+            },
+            splitLine: {
+              lineStyle: {
+                type: 'dashed'
+              }
+            },
+            scale: true
+          },
+          tooltip:{
+              trigger: 'item',
+            // formatter: function (param){
+            //       // console.log(param);
+            //     return 'ok';
+            //     // param.value[2] + '<br/>' + '价格分位数' + ' ' + param.value[0] + '<br/>' + '波动率分位数' + ':' + value[2] + '<br/>';
+            // }
+          },
+          series: [
+            {
+              name: '有色',
+              data: data1,
+              type: 'scatter',
+              symbolSize: 20,
+              //     function (data1) {
+              //     return 30;
+              //   // return Math.sqrt(data1[2]) / 5e2;
+              // },
+              emphasis: {
+                focus: 'series',
+                label: {
+                  show: true,
+                  formatter: function (param) {
+                    return param.data[2];
+                  },
+                  position: 'top'
+                }
+              }
+            },
+            {
+              name: '贵金属',
+              data: data2,
+              type: 'scatter',
+              symbolSize: 20,
+              //     function (data) {
+              //     return 30;
+              //   // return Math.sqrt(data[2]) / 5e2;
+              // },
+              emphasis: {
+                focus: 'series',
+                label: {
+                  show: true,
+                  formatter: function (param) {
+                    return param.data[2];
+                  },
+                  position: 'top'
+                }
+              }
+            },
+            {
+              name: '黑色',
+              data: data3,
+              type: 'scatter',
+              symbolSize: 20,
+              //     function (data) {
+              //     return 30;
+              //   // return Math.sqrt(data[2]) / 5e2;
+              // },
+              emphasis: {
+                focus: 'series',
+                label: {
+                  show: true,
+                  formatter: function (param) {
+                    return param.data[2];
+                  },
+                  position: 'top'
+                }
+              }
+            },
+            {
+              name: '农产品',
+              data: data4,
+              type: 'scatter',
+              symbolSize: 20,
+              //     function (data) {
+              //     return 30;
+              //   // return Math.sqrt(data[2]) / 5e2;
+              // },
+              emphasis: {
+                focus: 'series',
+                label: {
+                  show: true,
+                  formatter: function (param) {
+                    return param.data[2];
+                  },
+                  position: 'top'
+                }
+              }
+            },
+            {
+              name: '化工',
+              data: data5,
+              type: 'scatter',
+              symbolSize: 20,
+              //     function (data) {
+              //     return 30;
+              //   // return Math.sqrt(data[2]) / 5e2;
+              // },
+              emphasis: {
+                focus: 'series',
+                label: {
+                  show: true,
+                  formatter: function (param) {
+                    return param.data[2];
+                  },
+                  position: 'top'
+                }
+              }
+            },
+          ]
+        };
+
+        //监听窗口
+        window.addEventListener("resize", () => {
+            if(myChart){
+                myChart.resize()
+            }
+        })
+
+        //option 实例化
+        if (option && typeof option === 'object') {
+            option && myChart.setOption(option,true);
+        }
+        myChart.on('click', function(param){
+          // 获取 div 标签下的所有子节点
+          let pObjs = object.childNodes;
+          for (let i = pObjs.length - 1; i >= 0; i--) { // 一定要倒序，正序是删不干净的，可自行尝试
+            object.removeChild(pObjs[i]);
+          }
+          if (param.seriesName === '有色'){
+            comp_table(1);
+          }
+          if (param.seriesName === '贵金属'){
+            comp_table(2);
+          }
+          if (param.seriesName === '黑色'){
+            comp_table(3);
+          }
+          if (param.seriesName === '农产品'){
+            comp_table(4);
+          }
+          if (param.seriesName === '化工'){
+            comp_table(5);
+          }
+          console.log(param.seriesName);
+        })
+    }
+
+    function comp_table(type){
+
+        let table = document.createElement('table');
+        let thead = document.createElement('thead');
+        let tbody = document.createElement('tbody');
+
+        table.appendChild(thead);
+        table.appendChild(tbody);
+
+        // Adding the entire table to the body tag
+        object.appendChild(table);
+        let arr;
+        // Creating and adding data to first row of the table
+        $.ajax("/cor", {
+          type: 'post',
+          async: false,
+          data: {
+            type: String(type)
+          },
+          success: function (res) {
+            arr = res;
+            console.log(arr)
+          },
+          error: function (e, status) {
+            alert(status);
+          }
+        })
+        let category = ['有色', '贵金属', '黑色', '农产品', '化工'];
+        let name = [];
+        for (let i=0; i<data.length;i++){
+            if (data[i][3] === category[type-1]){
+              name.push(data[i][2])
+            }
+        }
+        console.log(name)
+
+        let row_1 = document.createElement('tr');
+        let heading_1 = document.createElement('th');
+        heading_1.innerHTML = "Index";
+        row_1.appendChild(heading_1);
+
+
+        for (let i=0; i<name.length; i++){
+            let heading_name = document.createElement('th');
+            heading_name.innerHTML = name[i];
+            row_1.appendChild(heading_name);
+        }
+        thead.appendChild(row_1);
+
+
+        for (let i=0; i<name.length; i++){
+          let row = document.createElement('tr');
+          let index = document.createElement('td');
+          index.innerHTML = name[i];
+          row.appendChild(index)
+          for (let j=0; j<name.length; j++){
+              let datas = document.createElement('td');
+              datas.innerHTML = arr[i][j];
+              row.appendChild(datas);
+          }
+          thead.appendChild(row);
+        }
+    }
+
+}
+</script>
+
+</body>
+</html>

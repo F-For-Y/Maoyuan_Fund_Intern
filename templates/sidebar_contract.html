@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8">
+<style>
+    body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: "Lato", sans-serif;
+  overflow-y: hidden;
+}
+
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: dimgrey;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
+
+.sidebar a {
+  display: block;
+  color: white;
+  padding: 16px;
+  text-decoration: none;
+}
+
+.sidebar a.active {
+  background-color: #333;
+  color: grey;
+}
+
+.sidebar a:hover:not(.active) {
+  background-color: #333;
+  color: white;
+}
+
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 900px;
+  /*border: 1px solid #49d;*/
+}
+
+month{
+  height:30%;
+  width:90%;
+  margin-left:1%;
+  margin-bottom:1%;
+  float: left;
+  /*border:1px solid #49d;*/
+}
+
+category{
+  height:50%;
+  width:90%;
+  margin-bottom:1%;
+  float: left;
+  /*border:1px solid #49d;*/
+}
+
+.btn {
+  background-color: grey;
+  color: white;
+  padding: 10px;
+  font-size: 10px;
+  border: none;
+  outline: none;
+}
+
+.dropdown {
+  position: absolute;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 6px 8px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .btn {
+  background-color: black;
+}
+
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {float: left;}
+  div.content {margin-left: 0;}
+}
+
+@media screen and (max-width: 400px) {
+  .sidebar a {
+    text-align: center;
+    float: none;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+<!---->
+<div class="sidebar">
+  <a href="./sidebar.html"><i class="fa fa-fw fa-home"></i>Home Page</a>
+  <a href="./sidebar_bubble.html"><i class="fa fa-fw fa-align-justify"></i>Bubble & Cor</a>
+  <a href="./sidebar_month.html"><i class="fa fa-fw fa-line-chart"></i>Monthly review</a>
+  <a class = 'active' href="./sidebar_contract.html"><i class="fa fa-fw fa-search"></i>Contract</a>
+  <a href="./chi_cang.html"><i class="fa fa-fw fa-line-chart"></i>receipt</a>
+  <a href="./sidebar_stock.html"><i class="fa fa-fw fa-line-chart"></i>stock</a>
+</div>
+
+
+
+
+<div class="content">
+<!--  <div id = 'navi' style="margin-top: 2%; height: 80%; width: 15%; border: 1px solid #49d;float: left">-->
+  <div id = 'navi' style="margin-top: 2%; height: 80%; width: 15%; float: left">
+    <!-- 1.-->
+    <label>Select Your Contract:</label><br><br>
+    <select id="select_column" name="star" value="Li">
+        <option value="zn">zn</option>
+        <option value="cu">cu</option>
+        <option value="ag">ag</option>
+        <option value="au">au</option>
+        <option value="al">al</option>
+        <option value="i">i</option>
+        <option value="rb">rb</option>
+        <option value="m">m</option>
+        <option value="y">y</option>
+        <option value="p">p</option>
+        <option value="cf">cf</option>
+        <option value="ru">ru</option>
+        <option value="sc">sc</option>
+        <option value="fu">fu</option>
+        <option value="sp">sp</option>
+        <option value="hc">hc</option>
+        <option value="ni">ni</option>
+        <option value="bu">bu</option>
+        <option value="sn">sn</option>
+        <option value="sa">sa</option>
+        <option value="ta">ta</option>
+        <option value="ma">ma</option>
+        <option value="oi">oi</option>
+        <option value="fg">fg</option>
+        <option value="v">v</option>
+        <option value="eg">eg</option>
+        <option value="pp">pp</option>
+        <option value="pg">pg</option>
+        <option value="eb">eb</option>
+        <option value="l">l</option>
+        <option value="jd">jd</option>
+        <option value="rm">rm</option>
+        <option value="sr">sr</option>
+        <option value="ap">ap</option>
+        <option value="j">j</option>
+        <option value="jm">jm</option>
+        <option value="sm">sm</option>
+        <option value="sf">sf</option>
+    </select>
+    <input type="submit" value="submit" id ="select_button" onclick="
+    contract_line(document.getElementById('select_column').value, 'initial');
+    ">
+
+
+    <!-- 2.-->
+    <br><br>
+    <label>Add Your Date:</label><br><br>
+    <input type="date" id="time1" name="time1" value = "">
+    <button id="button1" onclick="check_click1()">Select</button>
+
+
+    <p></p>
+    <input type="date" id="time2" name="time1" value = "">
+    <button id="button3" onclick="check_click2()">Select</button>
+
+
+    <p></p>
+    <input type="date" id="time3" name="time1" value = "">
+    <button id="button5" onclick="check_click3()">Select</button>
+
+
+    <p></p>
+    <input type="date" id="time4" name="time1" value = "">
+    <button id="button7" onclick="check_click4()">Select</button>
+
+
+  </div>
+
+<!--  <div id = 'line' style="margin-left:15%; margin-top: 2%; height: 80%; width: 85%; border: 1px solid #49d;"></div>-->
+  <div id = 'line' style="margin-left:15%; margin-top: 2%; height: 80%; width: 85%;"></div>
+
+</div>
+
+
+<script>
+    let chartDom = document.getElementById('line');
+    let myChart = echarts.init(chartDom);
+    let setting = {};
+    let current_id = 'zn';
+    // myChart.showLoading({ text: '正在加载数据' });
+    function time_converter(time){
+        let y = time.getFullYear();
+        let m = time.getMonth()+1;
+        let d = time.getDate()-1;
+        return y + '-' + m + '-' + d;
+    }
+    function contract_line(id, time){
+        let data;
+        $.ajax("/contract", {
+          type: 'post',
+          async: false,
+          data: {
+            id: id,
+            time: time
+          },
+          success: function (res) {
+            current_id = id;
+            data = res;
+            console.log(data);
+            // myChart.hideLoading();
+          },
+          error: function (e, status) {
+            alert(status);
+          }
+        })
+
+            option = {
+                title: {
+                    text: 'Contract Historical Price'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['one day before','','','','', 'volume']
+                },
+                grid: {
+                    top: '10%',
+                    left: '4%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: true,
+                    data: data[0],
+                    axisTick: {
+                        alignWithLabel: true
+                    },
+                },
+                yAxis: [{
+                    type: 'value',
+                    name: 'closeprice',
+                    scale: true,
+                    position: 'left',
+                    axisLine: {
+                      show: true,
+                    },
+                },
+                {
+                    type: 'value',
+                    name: 'volume',
+                    position: 'right',
+                    scale: true,
+                    axisLine: {
+                      show: true,
+                    },
+                }],
+                series: [
+                    {
+                        name: 'one day before',
+                        type: 'line',
+                        data: data[1],
+                        yAxisIndex: 0,
+                    },
+                    {
+                        name: 'volume',
+                        type: 'bar',
+                        barWidth: 30,
+                        yAxisIndex: 1,
+                        data: data[2],
+                        itemStyle: {
+                            normal: {
+                                color: '#5470C6'
+                            }
+                        }
+                    },
+                    {
+                        name: null,
+                        type: 'line',
+                        data: null,
+                        yAxisIndex: 0,
+                    },
+                    {
+                        name: null,
+                        type: 'line',
+                        data: null,
+                        yAxisIndex: 0,
+                    },
+                    {
+                        name: null,
+                        type: 'line',
+                        data: null,
+                        yAxisIndex: 0,
+                    },
+                    {
+                        name: null,
+                        type: 'line',
+                        data: null,
+                        yAxisIndex: 0,
+                    },
+                ]
+            };
+            //监听窗口
+            window.addEventListener("resize", () => {
+                if (myChart) {
+                    myChart.resize()
+                }
+            })
+
+            //option 实例化
+            if (option && typeof option === 'object') {
+                // myChart.hideLoading();
+                option && myChart.setOption(option, true);
+            }
+            setting = option;
+    }
+
+
+   function check_click1(){
+     let date_value = document.getElementById('time1').value
+     let temp;
+     $.ajax("/contract", {
+          type: 'post',
+          async: false,
+          data: {
+            id: current_id,
+            time: date_value
+          },
+          success: function (res) {
+            temp = res;
+            // myChart.hideLoading();
+          },
+          error: function (e, status) {
+            alert(status);
+          }
+     })
+     if (option['legend'].length === 2){
+         option['legend']['data'].push(date_value)
+     }
+     else{
+         option['legend']['data'][2] = date_value;
+     }
+     option['series'][2]['name'] = date_value;
+     option['series'][2]['data'] = temp[1];
+     myChart.setOption(option, true)
+     console.log(option)
+     // option['xAxis']['data'] = Array.from(temp[0].concat(option['xAxis']['data']))
+     // myChart.setOption(option);
+   }
+
+   function check_click2(){
+     let date_value = document.getElementById('time2').value
+     let temp;
+     $.ajax("/contract", {
+          type: 'post',
+          async: false,
+          data: {
+            id: current_id,
+            time: date_value
+          },
+          success: function (res) {
+            temp = res;
+            // myChart.hideLoading();
+          },
+          error: function (e, status) {
+            alert(status);
+          }
+     })
+     if (option['legend'].length === 3){
+         option['legend']['data'].push(date_value)
+     }
+     else{
+         option['legend']['data'][3] = date_value;
+     }
+     option['series'][3]['name'] = date_value;
+     option['series'][3]['data'] = temp[1];
+     myChart.setOption(option, true)
+     console.log(option)
+     // option['xAxis']['data'] = Array.from(temp[0].concat(option['xAxis']['data']))
+     // myChart.setOption(option);
+   }
+
+   function check_click3(){
+     let date_value = document.getElementById('time3').value
+     let temp;
+     $.ajax("/contract", {
+          type: 'post',
+          async: false,
+          data: {
+            id: current_id,
+            time: date_value
+          },
+          success: function (res) {
+            temp = res;
+            // myChart.hideLoading();
+          },
+          error: function (e, status) {
+            alert(status);
+          }
+     })
+     if (option['legend'].length === 4){
+         option['legend']['data'].push(date_value)
+     }
+     else{
+         option['legend']['data'][4] = date_value;
+     }
+     option['series'][4]['name'] = date_value;
+     option['series'][4]['data'] = temp[1];
+     myChart.setOption(option, true)
+     console.log(option)
+     // option['xAxis']['data'] = Array.from(temp[0].concat(option['xAxis']['data']))
+     // myChart.setOption(option);
+   }
+
+   function check_click4(){
+     let date_value = document.getElementById('time4').value
+     let temp;
+     $.ajax("/contract", {
+          type: 'post',
+          async: false,
+          data: {
+            id: current_id,
+            time: date_value
+          },
+          success: function (res) {
+            temp = res;
+            // myChart.hideLoading();
+          },
+          error: function (e, status) {
+            alert(status);
+          }
+     })
+     if (option['legend'].length === 5){
+         option['legend']['data'].push(date_value)
+     }
+     else{
+         option['legend']['data'][5] = date_value;
+     }
+     option['series'][5]['name'] = date_value;
+     option['series'][5]['data'] = temp[1];
+     myChart.setOption(option, true)
+     console.log(option)
+     // option['xAxis']['data'] = Array.from(temp[0].concat(option['xAxis']['data']))
+     // myChart.setOption(option);
+   }
+
+
+   contract_line('zn', 'initial');
+   console.log(option);
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

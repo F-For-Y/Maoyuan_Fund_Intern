@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8">
+<style>
+    body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: "Lato", sans-serif;
+  overflow-y: hidden;
+}
+
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: dimgrey;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
+
+.sidebar a {
+  display: block;
+  color: white;
+  padding: 16px;
+  text-decoration: none;
+}
+
+.sidebar a.active {
+  background-color: #333;
+  color: grey;
+}
+
+.sidebar a:hover:not(.active) {
+  background-color: #333;
+  color: white;
+}
+
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 900px;
+  /*border: 1px solid #49d;*/
+}
+
+month{
+  height:30%;
+  width:90%;
+  margin-left:1%;
+  margin-bottom:1%;
+  float: left;
+  /*border:1px solid #49d;*/
+}
+
+category{
+  height:50%;
+  width:90%;
+  margin-bottom:1%;
+  float: left;
+  /*border:1px solid #49d;*/
+}
+
+.btn {
+  background-color: grey;
+  color: white;
+  padding: 10px;
+  font-size: 10px;
+  border: none;
+  outline: none;
+}
+
+.dropdown {
+  position: absolute;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 6px 8px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .btn {
+  background-color: black;
+}
+
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {float: left;}
+  div.content {margin-left: 0;}
+}
+
+@media screen and (max-width: 400px) {
+  .sidebar a {
+    text-align: center;
+    float: none;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+<!---->
+<div class="sidebar">
+  <a href="./sidebar.html"><i class="fa fa-fw fa-home"></i>Home Page</a>
+  <a href="./sidebar_bubble.html"><i class="fa fa-fw fa-align-justify"></i>Bubble & Cor</a>
+  <a href="./sidebar_month.html"><i class="fa fa-fw fa-line-chart"></i>Monthly review</a>
+  <a href="./sidebar_contract.html"><i class="fa fa-fw fa-search"></i>Contract</a>
+  <a class = 'active' href="./chi_cang.html"><i class="fa fa-fw fa-line-chart"></i>receipt</a>
+  <a href="./sidebar_stock.html"><i class="fa fa-fw fa-line-chart"></i>stock</a>
+</div>
+
+
+
+
+<div class="content">
+<!--  <div id = 'navi' style="margin-top: 2%; height: 80%; width: 15%; border: 1px solid #49d;float: left">-->
+  <div id = 'navi' style="margin-top: 2%; height: 80%; width: 15%; float: left">
+    <!-- 1.-->
+    <label>Select Your Contract:</label><br><br>
+    <button class="btn">Button</button>
+      <div class="dropdown">
+        <button class="btn" style="border-left:1px solid white">
+          <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+          <a href="javascript:void(0)" onclick="receipt_line('cf')">cf</a>
+          <a href="javascript:void(0)" onclick="receipt_line('sa')">sa</a>
+          <a href="javascript:void(0)" onclick="receipt_line('ta')">ta</a>
+          <a href="javascript:void(0)" onclick="receipt_line('ma')">ma</a>
+          <a href="javascript:void(0)" onclick="receipt_line('oi')">oi</a>
+          <a href="javascript:void(0)" onclick="receipt_line('fg')">fg</a>
+          <a href="javascript:void(0)" onclick="receipt_line('rm')">rm</a>
+          <a href="javascript:void(0)" onclick="receipt_line('sr')">sr</a>
+          <a href="javascript:void(0)" onclick="receipt_line('ap')">ap</a>
+          <a href="javascript:void(0)" onclick="receipt_line('sm')">sm</a>
+          <a href="javascript:void(0)" onclick="receipt_line('sf')">sf</a>
+          <a href="javascript:void(0)" onclick="receipt_line('cu')">cu</a>
+          <a href="javascript:void(0)" onclick="receipt_line('rb')">rb</a>
+          <a href="javascript:void(0)" onclick="receipt_line('au')">au</a>
+          <a href="javascript:void(0)" onclick="receipt_line('zn')">zn</a>
+          <a href="javascript:void(0)" onclick="receipt_line('m')">m</a>
+          <a href="javascript:void(0)" onclick="receipt_line('al')">al</a>
+          <a href="javascript:void(0)" onclick="receipt_line('lh')">lh</a>
+        </div>
+      </div>
+
+<!--    <select id="select_column" name="star" value="Li">-->
+<!--&lt;!&ndash;        <option value="zn">zn</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="cu">cu</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="ag">ag</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="au">au</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="al">al</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="i">i</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="rb">rb</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="m">m</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="y">y</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="p">p</option>&ndash;&gt;-->
+<!--        <option value="cf">cf</option>-->
+<!--&lt;!&ndash;        <option value="ru">ru</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="sc">sc</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="fu">fu</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="sp">sp</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="hc">hc</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="ni">ni</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="bu">bu</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="sn">sn</option>&ndash;&gt;-->
+<!--        <option value="sa">sa</option>-->
+<!--        <option value="ta">ta</option>-->
+<!--        <option value="ma">ma</option>-->
+<!--        <option value="oi">oi</option>-->
+<!--        <option value="fg">fg</option>-->
+<!--&lt;!&ndash;        <option value="v">v</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="eg">eg</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="pp">pp</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="pg">pg</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="eb">eb</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="l">l</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="jd">jd</option>&ndash;&gt;-->
+<!--        <option value="rm">rm</option>-->
+<!--        <option value="sr">sr</option>-->
+<!--        <option value="ap">ap</option>-->
+<!--&lt;!&ndash;        <option value="j">j</option>&ndash;&gt;-->
+<!--&lt;!&ndash;        <option value="jm">jm</option>&ndash;&gt;-->
+<!--        <option value="sm">sm</option>-->
+<!--        <option value="sf">sf</option>-->
+<!--    </select>-->
+<!--    <input type="submit" value="submit" id ="select_button" onclick="-->
+<!--    receipt_line(document.getElementById('select_column').value);-->
+<!--    ">-->
+    <!-- 2.-->
+
+
+  </div>
+<!--  <div id = 'line' style="margin-left:15%; margin-top: 2%; height: 80%; width: 85%; border: 1px solid #49d;"></div>-->
+  <div id = 'line' style="margin-left:5%; margin-top: 2%; height: 80%; width: 95%;"></div>
+
+</div>
+
+
+<script>
+    function receipt_line(id){
+        let chartDom = document.getElementById('line');
+        let myChart = echarts.init(chartDom);
+        // myChart.showLoading({ text: '正在加载数据' });
+
+        myChart.showLoading({
+          text : '正在加载数据'
+        });
+        let data;
+        $.ajax("/receipt", {
+          type: 'post',
+          async: false,
+          data: {
+            id: id,
+          },
+          success: function (res) {
+            data = res;
+            console.log(data);
+            // myChart.hideLoading();
+          },
+          error: function (e, status) {
+            alert(status);
+          }
+        })
+
+        const colors = ['#ffd454',  '#91CC75', '#ea7ccc', '#5470C6'];
+        option = {
+          color: colors,
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          grid: {
+            left: '10%',
+            right: '19%'
+          },
+          title: {
+            show: true,
+            text: "种类:" + id,
+            x: 200
+          },
+          toolbox: {
+            feature: {
+              dataView: { show: true, readOnly: false },
+              restore: { show: true },
+              saveAsImage: { show: true }
+            }
+          },
+          legend: {
+            // data: ['1-5净持仓', '6-20净持仓', '其它净持仓', '价格']
+            data: ['1-5净持仓', '6-20净持仓', '其它净持仓',]
+          },
+          dataZoom: [
+            {
+              show: true,
+              realtime: true,
+              start: 90,
+              end: 100
+            },
+            {
+              type: 'inside',
+              realtime: true,
+              start: 90,
+              end: 100
+            }
+          ],
+          xAxis: [
+            {
+              type: 'category',
+              axisTick: {
+                alignWithLabel: true
+              },
+              // prettier-ignore
+              data: data[0]
+            }
+          ],
+          yAxis: [
+            {
+              type: 'value',
+              name: '1-5净持仓',
+              position: 'right',
+              alignTicks: true,
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  color: colors[0]
+                }
+              },
+              axisLabel: {
+                formatter: '{value} '
+              }
+            },
+            {
+              type: 'value',
+              name: '6-20净持仓',
+              position: 'right',
+              alignTicks: true,
+              offset: 80,
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  color: colors[1]
+                }
+              },
+              axisLabel: {
+                formatter: '{value} '
+              }
+            },
+            {
+              type: 'value',
+              name: '其它净持仓',
+              position: 'right',
+              alignTicks: true,
+              offset: 160,
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  color: colors[2]
+                }
+              },
+              axisLabel: {
+                formatter: '{value} '
+              }
+            },
+            // {
+            //   type: 'value',
+            //   name: '价格',
+            //   position: 'left',
+            //   alignTicks: true,
+            //   axisLine: {
+            //     show: true,
+            //     lineStyle: {
+            //       color: colors[3]
+            //     }
+            //   },
+            //   scale: true,
+            //   axisLabel: {
+            //     formatter: '{value}'
+            //   }
+            // }
+          ],
+          series: [
+            {
+              name: '1-5净持仓',
+              type: 'line',
+              data: data[1],
+              // smooth: true,
+            },
+            {
+              name: '6-20净持仓',
+              type: 'line',
+              yAxisIndex: 1,
+              data: data[2],
+              // smooth: true,
+            },
+            {
+              name: '其它净持仓',
+              type: 'line',
+              yAxisIndex: 2,
+              data: data[4],
+              // smooth: true,
+            },
+            // {
+            //   name: '价格',
+            //   type: 'line',
+            //   yAxisIndex: 3,
+            //   data: data[3],
+            //   // smooth: true
+            // }
+          ]
+        };
+        // myChart.hideLoading()
+        //监听窗口
+        window.addEventListener("resize", () => {
+            if (myChart) {
+                myChart.resize()
+            }
+        })
+
+        //option 实例化
+        if (option && typeof option === 'object') {
+            // myChart.hideLoading();
+            myChart.hideLoading();
+            option && myChart.setOption(option, true);
+            myChart.hideLoading();
+        }
+    }
+
+   receipt_line('cf');
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
